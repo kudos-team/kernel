@@ -1,3 +1,4 @@
+/// All different colour codes
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
@@ -24,6 +25,12 @@ pub enum Color {
 #[repr(transparent)]
 struct ColorCode(u8);
 
+/*
+The colour code is in the format (this is a bitmask): LBBBFFFF
+L - blink
+B - Background
+F - Foreground
+*/
 impl ColorCode {
     fn new(foreground: Color, background: Color) -> ColorCode {
         ColorCode((background as u8) << 4 | (foreground as u8))
@@ -38,6 +45,7 @@ struct ScreenChar {
 }
 
 
+// Volatile so it doesn't optimise out some expressions due to thinking it does nothing
 use volatile::Volatile;
 
 const BUFFER_HEIGHT: usize = 25;
@@ -79,12 +87,11 @@ impl Writer {
     pub fn write_string(&mut self, s: &str) {
         for byte in s.bytes() {
             match byte {
-                // printable ASCII byte or newline
+                // Printable ASCII byte or newline
                 0x20..=0x7e | b'\n' => self.write_byte(byte),
-                // not part of printable ASCII range
+                // Not part of printable ASCII range
                 _ => self.write_byte(0xfe),
             }
-
         }
     }
 
@@ -110,6 +117,7 @@ impl Writer {
     }
 }
 
+// Some important formatting macro or whatever
 use core::fmt;
 
 impl fmt::Write for Writer {
@@ -119,6 +127,7 @@ impl fmt::Write for Writer {
     }
 }
 
+// Make a global Writer instance as lazy (so the compiler doesn't explode) static
 use lazy_static::lazy_static;
 use spin::Mutex;
 
@@ -131,6 +140,7 @@ lazy_static! {
 }
 
 
+// Some macros for ease of use
 #[macro_export]
 macro_rules! print {
     ($($arg:tt)*) => ($crate::vga_buffer::_print(format_args!($($arg)*)));

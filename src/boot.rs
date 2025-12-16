@@ -1,7 +1,9 @@
-use crate::{println};
+use crate::{print, println};
 
 /// This function will run when running the main program
 pub fn on_boot() {
-    println!("Hello world!");
-    panic!("Some panic message");
+    print!("Hello, ");
+    println!("world!");
+    println!("On a new line!");
+    panic!("Purposeful panic for testing");
 }

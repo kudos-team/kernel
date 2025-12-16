@@ -7,6 +7,10 @@
 #![reexport_test_harness_main = "test_main"]
 
 mod vga_buffer;
+
+mod boot;
+use crate::boot::on_boot;
+
 #[cfg(test)]
 mod tests;
 
@@ -35,10 +39,12 @@ pub fn test_runner(tests: &[&dyn Fn()]) {
 pub extern "C" fn _start() -> ! {
     // Testing stuff
     println!("Loaded!");
-    // panic!("Some panic message");
 
     #[cfg(test)]
     test_main();
+
+    #[cfg(not(test))]
+    on_boot();
 
     loop {}
 }

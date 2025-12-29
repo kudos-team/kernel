@@ -29,6 +29,7 @@ fn panic(info: &PanicInfo) -> ! {
 /// This function is called on init
 #[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
+    kudos::init();
     println!("Loaded!");
 
     #[cfg(test)]

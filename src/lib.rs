@@ -6,6 +6,7 @@
 #![reexport_test_harness_main = "test_main"]
 
 pub mod interrupts;
+pub mod gdt;
 
 pub mod serial;
 pub mod vga_buffer;
@@ -54,6 +55,7 @@ pub fn test_runner(tests: &[&dyn Testable]) {
 
 /// Initialises everything necessary
 pub fn init() {
+    gdt::init();
     interrupts::init_idt();
 }
 

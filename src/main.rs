@@ -17,23 +17,6 @@ mod serial;
 mod boot;
 
 
-// Some things to exit the qemu emulator with for testing
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[repr(u32)]
-pub enum QemuExitCode {
-    Success = 0x10,
-    Failed = 0x11,
-}
-pub fn exit_qemu(exit_code: QemuExitCode) {
-    use x86_64::instructions::port::Port;
-
-    unsafe {
-        let mut port = Port::new(0xf4);
-        port.write(exit_code as u32);
-    }
-}
-
-
 use core::panic::PanicInfo;
 
 /// This function is called on panic
@@ -48,7 +31,7 @@ fn panic(info: &PanicInfo) -> ! {
 fn panic(info: &PanicInfo) -> ! {
     serial_println!("[failed]\n");
     serial_println!("Error: {}\n", info);
-    exit_qemu(QemuExitCode::Failed);
+    tests::exit_qemu(tests::QemuExitCode::Failed);
     loop {}
 }
 
@@ -61,7 +44,7 @@ pub fn test_runner(tests: &[&dyn tests::Testable]) {
         test.run();
     }
 
-    exit_qemu(QemuExitCode::Success);
+    tests::exit_qemu(tests::QemuExitCode::Success);
 }
 
 

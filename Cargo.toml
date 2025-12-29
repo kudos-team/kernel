@@ -33,3 +33,7 @@ name = "kudos"
 test = true
 bench = false
 
+[[test]]
+name = "should_panic"
+harness = false
+

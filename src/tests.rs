@@ -1,8 +1,8 @@
-use crate::{print, println};
+use crate::{serial_print, serial_println};
 
 #[test_case]
 fn trivial_assertion() {
-    print!("trivial assertion... ");
+    serial_print!("trivial assertion... ");
     assert_eq!(1, 1);
-    println!("[ok]");
+    serial_println!("[ok]");
 }

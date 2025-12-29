@@ -8,18 +8,47 @@
 
 mod vga_buffer;
 
-mod boot;
-use crate::boot::on_boot;
-
 #[cfg(test)]
 mod tests;
+#[cfg(test)]
+mod serial;
+
+#[cfg(not(test))]
+mod boot;
+
+
+// Some things to exit the qemu emulator with for testing
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(u32)]
+pub enum QemuExitCode {
+    Success = 0x10,
+    Failed = 0x11,
+}
+pub fn exit_qemu(exit_code: QemuExitCode) {
+    use x86_64::instructions::port::Port;
+
+    unsafe {
+        let mut port = Port::new(0xf4);
+        port.write(exit_code as u32);
+    }
+}
+
 
 use core::panic::PanicInfo;
 
 /// This function is called on panic
+#[cfg(not(test))]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
+    loop {}
+}
+#[cfg(test)]
+#[panic_handler]
+fn panic(info: &PanicInfo) -> ! {
+    serial_println!("[failed]\n");
+    serial_println!("Error: {}\n", info);
+    exit_qemu(QemuExitCode::Failed);
     loop {}
 }
 
@@ -27,10 +56,12 @@ fn panic(info: &PanicInfo) -> ! {
 /// This function is called when testing
 #[cfg(test)]
 pub fn test_runner(tests: &[&dyn Fn()]) {
-    println!("Running {} tests", tests.len());
+    serial_println!("Running {} tests", tests.len());
     for test in tests {
         test();
     }
+
+    exit_qemu(QemuExitCode::Success);
 }
 
 
@@ -44,7 +75,7 @@ pub extern "C" fn _start() -> ! {
     test_main();
 
     #[cfg(not(test))]
-    on_boot();
+    boot::on_boot();
 
     loop {}
 }

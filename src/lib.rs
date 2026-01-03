@@ -65,21 +65,34 @@ pub fn hlt_loop() -> ! {
 }
 
 
+use bootloader::BootInfo;
 /// Initialises everything necessary
-pub fn init() {
+pub fn init(boot_info: &'static BootInfo) {
+    use x86_64::VirtAddr;
+
     gdt::init();
     interrupts::init_idt();
     unsafe { interrupts::PICS.lock().initialize() };
     x86_64::instructions::interrupts::enable();
+
+    let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
+    let mut mapper = unsafe { memory::init(phys_mem_offset) };
+    let mut frame_allocator = unsafe {
+        memory::BootInfoFrameAllocator::init(&boot_info.memory_map)
+    };
+    allocator::init_heap(&mut mapper, &mut frame_allocator)
+        .expect("heap initialization failed");
 }
 
 
 #[cfg(test)]
+use bootloader::entry_point;
+#[cfg(test)]
 entry_point!(test_kernel_main);
 // Entry point for `cargo test`
 #[cfg(test)]
-fn test_kernel_main(_boot_info: &'static BootInfo) -> ! {
-    init();
+fn test_kernel_main(boot_info: &'static BootInfo) -> ! {
+    init(boot_info);
     test_main();
     hlt_loop();
 }

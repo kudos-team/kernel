@@ -42,4 +42,7 @@ harness = false
 [[test]]
 name = "stack_overflow"
 harness = false
+[[test]]
+name = "memory"
+harness = false
 

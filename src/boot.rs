@@ -1,25 +1,10 @@
-use crate::BootInfo;
 use kudos::{print, println};
 
 extern crate alloc;
 use alloc::{boxed::Box, vec, vec::Vec, rc::Rc};
 
 /// This function will run when running the main program
-pub fn on_boot(boot_info: &'static BootInfo) {
-    use kudos::allocator;
-    use kudos::memory::{self, BootInfoFrameAllocator};
-    use x86_64::VirtAddr;
-
-    let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
-    let mut mapper = unsafe { memory::init(phys_mem_offset) };
-    let mut frame_allocator = unsafe {
-        BootInfoFrameAllocator::init(&boot_info.memory_map)
-    };
-
-    allocator::init_heap(&mut mapper, &mut frame_allocator)
-        .expect("heap initialization failed");
-
-
+pub fn on_boot() {
     // allocate a number on the heap
     let heap_value = Box::new(41);
     println!("heap_value at {:p}", heap_value);

@@ -10,6 +10,7 @@ mod boot;
 
 use kudos::println;
 use core::panic::PanicInfo;
+use bootloader::{BootInfo, entry_point};
 
 /// This function is called on panic
 #[cfg(not(test))]
@@ -27,8 +28,8 @@ fn panic(info: &PanicInfo) -> ! {
 
 
 /// This function is called on init
-#[unsafe(no_mangle)]
-pub extern "C" fn _start() -> ! {
+entry_point!(kernel_main);
+fn kernel_main(boot_info: &'static BootInfo) -> ! {
     kudos::init();
     println!("Loaded!");
 

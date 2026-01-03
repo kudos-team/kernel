@@ -16,7 +16,7 @@ use core::panic::PanicInfo;
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    kudos::hlt_loop();
 }
 
 #[cfg(test)]
@@ -37,5 +37,5 @@ pub extern "C" fn _start() -> ! {
     #[cfg(not(test))]
     boot::on_boot();
 
-    loop {}
+    kudos::hlt_loop();
 }

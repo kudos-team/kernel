@@ -4,7 +4,10 @@ use kudos::{print, println};
 pub fn on_boot() {
     print!("Hello, ");
     println!("world!");
-    kudos::interrupts::breakpoint();
-    println!("Still runs!");
+    /*kudos::interrupts::breakpoint();
+    println!("Still runs!");*/
     //panic!("Purposeful panic for testing");
+    /*loop {
+        print!("-");
+    }*/
 }

@@ -2,7 +2,7 @@ use x86_64::{
     structures::paging::PageTable,
     VirtAddr,
     PhysAddr,
-    structures::paging::{ Page, PhysFrame, Size4KiB, FrameAllocator, OffsetPageTable }
+    structures::paging::{ PhysFrame, Size4KiB, FrameAllocator, OffsetPageTable }
 };
 use bootloader::bootinfo::{ MemoryMap, MemoryRegionType };
 

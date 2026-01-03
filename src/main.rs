@@ -36,7 +36,7 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     #[cfg(test)]
     test_main();
     #[cfg(not(test))]
-    boot::on_boot(boot_info: &'static BootInfo);
+    boot::on_boot(boot_info);
 
     kudos::hlt_loop();
 }

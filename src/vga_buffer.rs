@@ -176,6 +176,7 @@ fn test_println_many() {
 #[test_case]
 fn test_println_output() {
     let s = "Some test string that fits on a single line";
+    use x86_64::instructions::interrupts;
     interrupts::without_interrupts(|| {
         let mut writer = WRITER.lock();
         writeln!(writer, "\n{}", s).expect("writeln failed");

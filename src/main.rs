@@ -27,7 +27,7 @@ fn panic(info: &PanicInfo) -> ! {
 }
 
 
-/// This function is called on init
+// This function is called on init
 entry_point!(kernel_main);
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
     kudos::init();
@@ -36,7 +36,7 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     #[cfg(test)]
     test_main();
     #[cfg(not(test))]
-    boot::on_boot();
+    boot::on_boot(boot_info: &'static BootInfo);
 
     kudos::hlt_loop();
 }

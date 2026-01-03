@@ -30,4 +30,5 @@ This contains tests that get individually compiled and ran during `cargo test`
 - `vga_buffer.rs` - handles printing to the screen (the real screen)
 - `interrupts.rs` - handles interrupts (e.g. clocks, devices, breakpoints, double fault errors)
 - `gdt.rs` - handles stuff for a 'global descriptor table' (helpful for `interrupts.rs`)
+- `memory.rs` - handles memory stuff like pageing and whatnot
 

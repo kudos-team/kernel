@@ -5,6 +5,7 @@
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+pub mod memory;
 pub mod interrupts;
 pub mod gdt;
 
@@ -72,7 +73,7 @@ pub fn init() {
 
 #[cfg(test)]
 entry_point!(test_kernel_main);
-/// Entry point for `cargo test`
+// Entry point for `cargo test`
 #[cfg(test)]
 fn test_kernel_main(_boot_info: &'static BootInfo) -> ! {
     init();

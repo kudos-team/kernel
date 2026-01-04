@@ -27,8 +27,9 @@ This contains tests that get individually compiled and ran during `cargo test`
 #### For the main program
 - `main.rs` - contains stuff that's ran directly - e.g. panic code, the main function, test running code, etc.
 - `boot.rs` - contains the function ran on boot (after loading other stuff)
-- `utils/*.rs` - contains various utilities for doing awesome things!
+- `utils/` - contains various utilities for doing awesome things!
     - `utils/fancy.rs` - contains stuff to make the output fancy!
+    - `utils/keys.rs` - contains abstractions for interacting with the keyboard!
 
 #### For the core library
 - `lib.rs` - contains imports for the rest of the code and provides some things for testing (e.g. exiting qemu)

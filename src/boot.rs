@@ -1,4 +1,4 @@
-use crate::{printLog, LogType};
+use crate::{printlgln, LogType};
 use crate::utils::fancy;
 use crate::utils::keys::choice;
 use kudos::{print, println};
@@ -20,10 +20,10 @@ async fn main() {
 
 /// This function will run when running the main program
 pub fn on_boot() {
-    printLog!(LogType::Info, "Test info!");
-    printLog!(LogType::Good, "Test good!");
-    printLog!(LogType::Warn, "Test warn!");
-    printLog!(LogType::Error, "Test bad!");
+    printlgln!(LogType::Info, "Test info!");
+    printlgln!(LogType::Good, "Test good!");
+    printlgln!(LogType::Warn, "Test warn!");
+    printlgln!(LogType::Error, "Test bad!");
     println!("Press y/n");
 
     let mut executor = Executor::new();

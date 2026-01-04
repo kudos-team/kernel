@@ -25,7 +25,7 @@ pub enum LogType {
 }
 
 #[doc(hidden)]
-pub fn _print_status(typ: LogType, args: fmt::Arguments) {
+pub fn _print_status(typ: LogType, args: fmt::Arguments, newline: bool) {
     let (c, col) = match typ {
         LogType::Info => (b'~', Color::Magenta),
         LogType::Good => (b'+', Color::Green),
@@ -43,17 +43,28 @@ pub fn _print_status(typ: LogType, args: fmt::Arguments) {
         writer.write_string("] ");
 
         writer.write_fmt(args).unwrap();
-        writer.write_byte(b'\n');
+        if newline {
+            writer.write_byte(b'\n');
+        }
     });
 }
 
 #[macro_export]
-macro_rules! printLog {
+macro_rules! printlg {
     ($typ:path, $($arg:tt)+) => {
-        $crate::utils::fancy::_print_status($typ, format_args!($($arg)*))
+        $crate::utils::fancy::_print_status($typ, format_args!($($arg)+), false)
     };
     ($($arg:tt)+) => {
-        $crate::utils::fancy::_print_status($crate::utils::fancy::LogType::Info, format_args!($($arg)*))
+        $crate::utils::fancy::_print_status($crate::utils::fancy::LogType::Info, format_args!($($arg)+), false)
+    };
+}
+#[macro_export]
+macro_rules! printlgln {
+    ($typ:path, $($arg:tt)+) => {
+        $crate::utils::fancy::_print_status($typ, format_args!($($arg)+), true)
+    };
+    ($($arg:tt)+) => {
+        $crate::utils::fancy::_print_status($crate::utils::fancy::LogType::Info, format_args!($($arg)+), true)
     };
 }
 

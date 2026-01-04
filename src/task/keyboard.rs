@@ -4,8 +4,8 @@ use conquer_once::spin::OnceCell;
 use crossbeam_queue::ArrayQueue;
 
 use core::{pin::Pin, task::{Poll, Context}};
-use futures_util::stream::Stream;
 use futures_util::task::AtomicWaker;
+use futures_util::stream::Stream;
 
 
 static WAKER: AtomicWaker = AtomicWaker::new();

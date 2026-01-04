@@ -1,6 +1,6 @@
 use kudos::{print, println};
 
-use kudos::task::{Task, simple_executor::SimpleExecutor, keyboard::ScancodeStream};
+use kudos::task::{Task, executor::Executor, keyboard::ScancodeStream};
 
 use futures_util::stream::StreamExt;
 use pc_keyboard::{layouts, DecodedKey, HandleControl, Keyboard, ScancodeSet1};
@@ -24,7 +24,7 @@ pub async fn print_keypresses() {
 
 /// This function will run when running the main program
 pub fn on_boot() {
-    let mut executor = SimpleExecutor::new();
+    let mut executor = Executor::new();
     executor.spawn(Task::new(print_keypresses()));
     executor.run();
 

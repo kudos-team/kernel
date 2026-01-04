@@ -1,4 +1,4 @@
-use crate::fancy;
+use crate::printGood;
 
 use kudos::{print};
 
@@ -26,7 +26,7 @@ pub async fn print_keypresses() {
 
 /// This function will run when running the main program
 pub fn on_boot() {
-    fancy::displayScreen();
+    printGood!("tEST!");
 
     let mut executor = Executor::new();
     executor.spawn(Task::new(print_keypresses()));

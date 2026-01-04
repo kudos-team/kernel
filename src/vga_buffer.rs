@@ -36,6 +36,9 @@ impl ColorCode {
         ColorCode((background as u8) << 4 | (foreground as u8))
     }
 }
+pub const DEFAULT_FG: Color = Color::White;
+pub const DEFAULT_BG: Color = Color::Black;
+
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
@@ -59,7 +62,7 @@ struct Buffer {
 pub struct Writer {
     pub column_position: usize,
     pub color_code: ColorCode,
-    pub buffer: &'static mut Buffer,
+    buffer: &'static mut Buffer,
 }
 
 impl Writer {
@@ -135,7 +138,7 @@ use spin::Mutex;
 lazy_static! {
     pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
         column_position: 0,
-        color_code: ColorCode::new(Color::Yellow, Color::Black),
+        color_code: ColorCode::new(DEFAULT_FG, DEFAULT_BG),
         buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
     });
 }

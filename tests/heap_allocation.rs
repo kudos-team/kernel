@@ -46,6 +46,29 @@ fn many_boxes_long_lived() {
     assert_eq!(*long_lived, 1);
 }
 
+#[test_case]
+fn reference_count() {
+    use alloc::{boxed::Box, vec, vec::Vec, rc::Rc};
+
+    // allocate a number on the heap
+    let _heap_value = Box::new(41);
+    // println!("heap_value at {:p}", heap_value);
+
+    // create a dynamically sized vector
+    let mut vec = Vec::new();
+    for i in 0..500 {
+        vec.push(i);
+    }
+    // println!("vec at {:p}", vec.as_slice());
+
+    // create a reference counted vector -> will be freed when count reaches 0
+    let reference_counted = Rc::new(vec![1, 2, 3]);
+    let cloned_reference = reference_counted.clone();
+    assert_eq!(Rc::strong_count(&cloned_reference), 2);
+    core::mem::drop(reference_counted);
+    assert_eq!(Rc::strong_count(&cloned_reference), 1);
+}
+
 
 extern crate alloc;
 

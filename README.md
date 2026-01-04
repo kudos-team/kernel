@@ -22,11 +22,15 @@ cargo test
 ## What the files do
 ### `tests/`
 This contains tests that get individually compiled and ran during `cargo test`
+
 ### `src/`
+#### For the main program
 - `main.rs` - contains stuff that's ran directly - e.g. panic code, the main function, test running code, etc.
 - `boot.rs` - contains the function ran on boot (after loading other stuff)
-- `fancy.rs` - contains stuff to make the output fancy!
+- `utils/*.rs` - contains various utilities for doing awesome things!
+    - `utils/fancy.rs` - contains stuff to make the output fancy!
 
+#### For the core library
 - `lib.rs` - contains imports for the rest of the code and provides some things for testing (e.g. exiting qemu)
 - `serial.rs` - contains stuff for printing to the console (the one you run `cargo test` in, not the actual kernel's console) for testing
 - `vga_buffer.rs` - handles printing to the screen (the real screen)

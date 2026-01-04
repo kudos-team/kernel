@@ -40,8 +40,10 @@ pub fn _print_status(typ: LogType, args: fmt::Arguments) {
 #[macro_export]
 macro_rules! printLog {
     ($typ:expr, $($arg:tt)*) => {
-        $crate::fancy::_print_status($typ, format_args!($($arg)*))
+        $crate::utils::fancy::_print_status($typ, format_args!($($arg)*))
     };
-    ($($arg:tt)*) => ($crate::fancy::_print_status($crate::fancy::LogType::Info, format_args!($($arg)*)));
+    ($($arg:tt)*) => {
+        $crate::utils::fancy::_print_status($crate::utils::fancy::LogType::Info, format_args!($($arg)*))
+    };
 }
 

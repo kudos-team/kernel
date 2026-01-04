@@ -7,8 +7,8 @@
 #[cfg(not(test))]
 mod boot;
 
-mod fancy;
-use fancy::LogType;
+mod utils;
+use utils::fancy::LogType;
 
 use core::panic::PanicInfo;
 use bootloader::{BootInfo, entry_point};

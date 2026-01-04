@@ -1,21 +1,31 @@
 use kudos::{print, println};
 
-use kudos::task::{Task, simple_executor::SimpleExecutor};
+use kudos::task::{Task, simple_executor::SimpleExecutor, keyboard::ScancodeStream};
 
-async fn async_number() -> u32 {
-    42
-}
+use futures_util::stream::StreamExt;
+use pc_keyboard::{layouts, DecodedKey, HandleControl, Keyboard, ScancodeSet1};
+pub async fn print_keypresses() {
+    let mut scancodes = ScancodeStream::new();
+    let mut keyboard = Keyboard::new(ScancodeSet1::new(),
+        layouts::Us104Key, HandleControl::Ignore);
 
-async fn example_task() {
-    let number = async_number().await;
-    println!("async number: {}", number);
+    while let Some(scancode) = scancodes.next().await {
+        if let Ok(Some(key_event)) = keyboard.add_byte(scancode) {
+            if let Some(key) = keyboard.process_keyevent(key_event) {
+                match key {
+                    DecodedKey::Unicode(character) => print!("{}", character),
+                    DecodedKey::RawKey(key) => print!("{:?}", key),
+                }
+            }
+        }
+    }
 }
 
 
 /// This function will run when running the main program
 pub fn on_boot() {
     let mut executor = SimpleExecutor::new();
-    executor.spawn(Task::new(example_task()));
+    executor.spawn(Task::new(print_keypresses()));
     executor.run();
 
     print!("Hello, ");

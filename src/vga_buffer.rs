@@ -48,8 +48,8 @@ struct ScreenChar {
 // Volatile so it doesn't optimise out some expressions due to thinking it does nothing
 use volatile::Volatile;
 
-const BUFFER_HEIGHT: usize = 25;
-const BUFFER_WIDTH: usize = 80;
+pub const BUFFER_HEIGHT: usize = 25;
+pub const BUFFER_WIDTH: usize = 80;
 
 #[repr(transparent)]
 struct Buffer {

@@ -5,6 +5,8 @@
 #![reexport_test_harness_main = "test_main"]
 
 #[cfg(not(test))]
+mod fancy;
+#[cfg(not(test))]
 mod boot;
 
 

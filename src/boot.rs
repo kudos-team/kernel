@@ -1,3 +1,5 @@
+use crate::fancy;
+
 use kudos::{print, println};
 
 use kudos::task::{Task, executor::Executor, keyboard::ScancodeStream};
@@ -24,14 +26,7 @@ pub async fn print_keypresses() {
 
 /// This function will run when running the main program
 pub fn on_boot() {
-    print!("Hello, ");
-    println!("world!");
-    /*kudos::interrupts::breakpoint();
-    println!("Still runs!");*/
-    //panic!("Purposeful panic for testing");
-    /*loop {
-        print!("-");
-    }*/
+    fancy::displayScreen();
 
     let mut executor = Executor::new();
     executor.spawn(Task::new(print_keypresses()));

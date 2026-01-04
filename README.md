@@ -31,5 +31,6 @@ This contains tests that get individually compiled and ran during `cargo test`
 - `interrupts.rs` - handles interrupts (e.g. clocks, devices, breakpoints, double fault errors)
 - `gdt.rs` - handles stuff for a 'global descriptor table' (helpful for `interrupts.rs`)
 - `memory.rs` - handles memory stuff like pageing and whatnot
-- `allocator.rs` - handles allocation of memory
+- `allocator.rs` - handles allocation of memory (also defines which allocator to use at the bottom of the file)
+    - `allocator/*.rs` - different implementations for the allocator
 

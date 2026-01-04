@@ -1,4 +1,4 @@
-use crate::printGood;
+use crate::{printLog, LogType};
 
 use kudos::{print};
 
@@ -26,7 +26,10 @@ pub async fn print_keypresses() {
 
 /// This function will run when running the main program
 pub fn on_boot() {
-    printGood!("tEST!");
+    printLog!(LogType::Info, "Test info!");
+    printLog!(LogType::Good, "Test good!");
+    printLog!(LogType::Warn, "Test warn!");
+    printLog!(LogType::Error, "Test bad!");
 
     let mut executor = Executor::new();
     executor.spawn(Task::new(print_keypresses()));

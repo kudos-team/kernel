@@ -5,12 +5,11 @@
 #![reexport_test_harness_main = "test_main"]
 
 #[cfg(not(test))]
-mod fancy;
-#[cfg(not(test))]
 mod boot;
 
+mod fancy;
+use fancy::LogType;
 
-use kudos::println;
 use core::panic::PanicInfo;
 use bootloader::{BootInfo, entry_point};
 
@@ -18,7 +17,7 @@ use bootloader::{BootInfo, entry_point};
 #[cfg(not(test))]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    println!("{}", info);
+    printLog!(LogType::Error, "{}", info);
     kudos::hlt_loop();
 }
 
@@ -32,8 +31,9 @@ fn panic(info: &PanicInfo) -> ! {
 // This function is called on init
 entry_point!(kernel_main);
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
+    printLog!("Loading...");
     kudos::init(boot_info);
-    println!("Loaded!");
+    printLog!(LogType::Good, "Loaded!");
 
     #[cfg(test)]
     test_main();

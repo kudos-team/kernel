@@ -26,8 +26,7 @@ pub enum Color {
 pub struct ColorCode(u8);
 
 /*
-The colour code is in the format (this is a bitmask): LBBBFFFF
-L - blink
+The colour code is in the format (this is a bitmask): BBBBFFFF
 B - Background
 F - Foreground
 */

@@ -23,7 +23,7 @@ pub enum Color {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(transparent)]
-struct ColorCode(u8);
+pub struct ColorCode(u8);
 
 /*
 The colour code is in the format (this is a bitmask): LBBBFFFF
@@ -32,7 +32,7 @@ B - Background
 F - Foreground
 */
 impl ColorCode {
-    fn new(foreground: Color, background: Color) -> ColorCode {
+    pub fn new(foreground: Color, background: Color) -> ColorCode {
         ColorCode((background as u8) << 4 | (foreground as u8))
     }
 }
@@ -57,9 +57,9 @@ struct Buffer {
 }
 
 pub struct Writer {
-    column_position: usize,
-    color_code: ColorCode,
-    buffer: &'static mut Buffer,
+    pub column_position: usize,
+    pub color_code: ColorCode,
+    pub buffer: &'static mut Buffer,
 }
 
 impl Writer {

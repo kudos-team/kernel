@@ -1,6 +1,6 @@
 use crate::fancy;
 
-use kudos::{print, println};
+use kudos::{print};
 
 use kudos::task::{Task, executor::Executor, keyboard::ScancodeStream};
 

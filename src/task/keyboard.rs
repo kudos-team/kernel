@@ -34,6 +34,14 @@ impl ScancodeStream {
             .expect("ScancodeStream::new should only be called once");
         ScancodeStream { _private: () }
     }
+
+    pub fn clear_queue(&self) {
+        let queue = SCANCODE_QUEUE
+            .try_get()
+            .expect("scancode queue not initialized");
+
+        while queue.pop().is_some() {}
+    }
 }
 
 impl Stream for ScancodeStream {

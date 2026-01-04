@@ -23,6 +23,7 @@ pub struct Task {
     future: Pin<Box<dyn Future<Output = ()>>>,
 }
 impl Task {
+    /// Only for functions that do not return
     pub fn new(future: impl Future<Output = ()> + 'static) -> Task {
         Task {
             id: TaskId::new(),

@@ -1,7 +1,18 @@
-use kudos::vga_buffer::{ColorCode, Color, WRITER, DEFAULT_FG, DEFAULT_BG};
+use kudos::vga_buffer::{ColorCode, Color, WRITER, DEFAULT_FG, DEFAULT_BG, BUFFER_HEIGHT};
 use core::fmt;
 use core::fmt::Write;
 use x86_64::instructions::interrupts;
+
+
+pub fn clear_line() {
+    interrupts::without_interrupts(|| {
+        let mut writer = WRITER.lock();
+        let row = BUFFER_HEIGHT - 1;
+        writer.clear_row(row);
+        writer.column_position = 0;
+    });
+}
+
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -36,13 +47,12 @@ pub fn _print_status(typ: LogType, args: fmt::Arguments) {
     });
 }
 
-
 #[macro_export]
 macro_rules! printLog {
-    ($typ:expr, $($arg:tt)*) => {
+    ($typ:path, $($arg:tt)+) => {
         $crate::utils::fancy::_print_status($typ, format_args!($($arg)*))
     };
-    ($($arg:tt)*) => {
+    ($($arg:tt)+) => {
         $crate::utils::fancy::_print_status($crate::utils::fancy::LogType::Info, format_args!($($arg)*))
     };
 }

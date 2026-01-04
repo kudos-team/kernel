@@ -70,8 +70,6 @@ fn reference_count() {
 }
 
 
-extern crate alloc;
-
 use bootloader::{entry_point, BootInfo};
 use core::panic::PanicInfo;
 

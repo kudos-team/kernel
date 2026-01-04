@@ -24,10 +24,6 @@ pub async fn print_keypresses() {
 
 /// This function will run when running the main program
 pub fn on_boot() {
-    let mut executor = Executor::new();
-    executor.spawn(Task::new(print_keypresses()));
-    executor.run();
-
     print!("Hello, ");
     println!("world!");
     /*kudos::interrupts::breakpoint();
@@ -36,4 +32,8 @@ pub fn on_boot() {
     /*loop {
         print!("-");
     }*/
+
+    let mut executor = Executor::new();
+    executor.spawn(Task::new(print_keypresses()));
+    executor.run();
 }

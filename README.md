@@ -33,4 +33,7 @@ This contains tests that get individually compiled and ran during `cargo test`
 - `memory.rs` - handles memory stuff like pageing and whatnot
 - `allocator.rs` - handles allocation of memory (also defines which allocator to use at the bottom of the file)
     - `allocator/*.rs` - different implementations for the allocator
+- `task/mod.rs` - contains the basic structure for tasks (async and stuff)
+    - `task/executor.rs` - contains the thing that runs tasks - an executor (and waker and stuff)
+    - `task/keyboard.rs` - contains some stuff for waiting for keyboard events
 

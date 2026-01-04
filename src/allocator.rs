@@ -64,8 +64,10 @@ fn align_up(addr: usize, align: usize) -> usize {
 
 pub mod linked_list;
 pub mod fixed_size_block;
-/*//For linked list (bad performance)
-use linked_list::LinkedListAllocator as GAlloc;*/
+
+// For linked list (bad performance)
+// use linked_list::LinkedListAllocator as GAlloc;
+
 // For Fixed size (uses lots of extra memory)
 use fixed_size_block::FixedSizeBlockAllocator as GAlloc;
 

@@ -28,8 +28,7 @@ impl FixedSizeBlockAllocator {
     }
     /// Allocates using the fallback allocator.
     fn fallback_alloc(&mut self, layout: Layout) -> *mut u8 {
-        let (size, align) = LinkedListAllocator::size_align(layout);
-        self.fallback_allocator._allocate(size, align)
+        self.fallback_allocator._allocate(layout)
     }
 }
 
@@ -86,10 +85,7 @@ unsafe impl GlobalAlloc for Locked<FixedSizeBlockAllocator> {
             }
             None => {
                 let ptr = NonNull::new(ptr).unwrap();
-                let (size, _) = LinkedListAllocator::size_align(layout);
-                unsafe {
-                    allocator.fallback_allocator.add_free_region(ptr.as_ptr() as usize, size)
-                }
+                allocator.fallback_allocator._deallocate(ptr.as_ptr() as usize, layout)
             }
         }
     }

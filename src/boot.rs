@@ -19,15 +19,15 @@ async fn main() {
     }
 }
 
-async fn timer_int(_: &()) {
+fn timer_int(_: &()) {
     use kudos::print;
     print!(".");
 }
 
 /// This function will run when running the main program
 pub fn on_boot() {
-    use kudos::{connect, interrupts::TimerIntSig};
-    connect!(TimerIntSig, timer_int);
+    use kudos::interrupts::TimerIntSig;
+    TimerIntSig.connect(timer_int);
     printlgln!(LogType::Info, "Test info!");
     printlgln!(LogType::Good, "Test good!");
     printlgln!(LogType::Warn, "Test warn!");

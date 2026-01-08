@@ -1,6 +1,6 @@
 use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame, PageFaultErrorCode};
 
-use crate::{println, hlt_loop, GlobalSignal};
+use crate::{println, hlt_loop, GlobalSig, GlobalSigDef};
 use crate::sigslt::Signal;
 use crate::gdt;
 
@@ -79,7 +79,7 @@ extern "x86-interrupt" fn keyboard_interrupt_handler(
     }
 }
 
-GlobalSignal!(TimerIntSig);
+GlobalSig!(TimerIntSig);
 extern "x86-interrupt" fn timer_interrupt_handler(
     _stack_frame: InterruptStackFrame)
 {
@@ -106,10 +106,13 @@ extern "x86-interrupt" fn page_fault_handler(
     hlt_loop();
 }
 
+GlobalSigDef!(BreakpointIntSig : InterruptStackFrame, |stack_frame: &InterruptStackFrame| {
+    println!("EXCEPTION: BREAKPOINT\n{:#?}", stack_frame);
+});
 extern "x86-interrupt" fn breakpoint_handler(
     stack_frame: InterruptStackFrame)
 {
-    println!("EXCEPTION: BREAKPOINT\n{:#?}", stack_frame);
+    BreakpointIntSig.emit_with(&stack_frame);
 }
 
 extern "x86-interrupt" fn double_fault_handler(

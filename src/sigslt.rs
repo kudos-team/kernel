@@ -80,12 +80,26 @@ impl Signal<()> {
 }
 
 
-// A macro for ease of use
+// Macros for ease of use
 #[macro_export]
 macro_rules! connect {
     ($signal:expr, $handler:expr) => {
         $signal._connect(move |t| {
             alloc::boxed::Box::pin(async move { $handler(&t).await })
         })
+    };
+}
+
+#[macro_export]
+macro_rules! GlobalSignal {
+    ($name:ident) => {
+        lazy_static::lazy_static! {
+            pub static ref $name: Signal<()> = Signal::new();
+        }
+    };
+    ($name:ident : $ty:ty) => {
+        lazy_static::lazy_static! {
+            pub static ref $name: Signal<$ty> = Signal<$ty>::new();
+        }
     };
 }

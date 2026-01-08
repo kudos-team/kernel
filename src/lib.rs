@@ -9,6 +9,8 @@ extern crate alloc;
 pub mod allocator;
 pub mod memory;
 
+pub mod sigslt;
+
 pub mod interrupts;
 pub mod gdt;
 

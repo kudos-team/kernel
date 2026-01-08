@@ -33,6 +33,7 @@ This contains tests that get individually compiled and ran during `cargo test`
 
 #### For the core library
 - `lib.rs` - contains imports for the rest of the code and provides some things for testing (e.g. exiting qemu)
+- `sigslt.rs` - contains stuff for signals and slots
 - `serial.rs` - contains stuff for printing to the console (the one you run `cargo test` in, not the actual kernel's console) for testing
 - `vga_buffer.rs` - handles printing to the screen (the real screen)
 - `interrupts.rs` - handles interrupts (e.g. clocks, devices, breakpoints, double fault errors)

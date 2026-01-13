@@ -135,3 +135,9 @@ fn panic(info: &PanicInfo) -> ! {
     exit_qemu(QemuExitCode::Failed);
     loop {}
 }
+
+pub fn real_panic_handler(info: &PanicInfo) -> ! {
+    println!();
+    printlgln!(LogType::Error, "{}", info);
+    hlt_loop();
+}

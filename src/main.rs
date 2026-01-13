@@ -12,18 +12,13 @@ use core::panic::PanicInfo;
 use bootloader::{BootInfo, entry_point};
 
 /// This function is called on panic
-#[cfg(not(test))]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    kudos::println!();
-    kudos::printlgln!(kudos::LogType::Error, "{}", info);
-    kudos::hlt_loop();
-}
-
-#[cfg(test)]
-#[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    kudos::test_panic_handler(info)
+    if cfg!(test) {
+        kudos::test_panic_handler(info)
+    } else {
+        kudos::real_panic_handler(info)
+    }
 }
 
 

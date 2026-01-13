@@ -1,7 +1,6 @@
-use crate::{printlgln, LogType};
-use crate::utils::fancy;
-use crate::utils::keys::choice;
-use kudos::{print, println};
+use kudos::utils::fancy;
+use kudos::utils::keys::choice;
+use kudos::{print, println, printlgln, LogType};
 use kudos::task::{Task, executor::Executor, keyboard::ScancodeStream};
 extern crate alloc;
 
@@ -27,7 +26,7 @@ pub fn on_boot() {
         print!(".");
     });
     connect!(BreakpointIntSig, async |_| {
-        use crate::printlgln;
+        use kudos::printlgln;
         printlgln!(LogType::Error, "Breakpoint occurred!");
     });
 

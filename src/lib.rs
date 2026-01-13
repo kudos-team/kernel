@@ -19,6 +19,9 @@ pub mod vga_buffer;
 
 pub mod task;
 
+pub mod utils;
+pub use utils::fancy::LogType;
+
 
 pub trait Testable {
     fn run(&self) -> ();

@@ -1,5 +1,5 @@
-use kudos::print;
-use kudos::task::keyboard::ScancodeStream;
+use crate::print;
+use crate::task::keyboard::ScancodeStream;
 
 use futures_util::stream::StreamExt;
 use pc_keyboard::{layouts, DecodedKey, HandleControl, Keyboard, ScancodeSet1};

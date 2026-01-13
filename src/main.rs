@@ -7,8 +7,6 @@
 #[cfg(not(test))]
 mod boot;
 
-mod utils;
-use utils::fancy::LogType;
 
 use core::panic::PanicInfo;
 use bootloader::{BootInfo, entry_point};
@@ -18,7 +16,7 @@ use bootloader::{BootInfo, entry_point};
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     kudos::println!();
-    printlgln!(LogType::Error, "{}", info);
+    kudos::printlgln!(kudos::LogType::Error, "{}", info);
     kudos::hlt_loop();
 }
 
@@ -32,10 +30,10 @@ fn panic(info: &PanicInfo) -> ! {
 // This function is called on init
 entry_point!(kernel_main);
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
-    printlg!("Loading...");
+    kudos::printlg!("Loading...");
     kudos::init(boot_info);
-    utils::fancy::clear_line();
-    printlgln!(LogType::Good, "Loaded!");
+    kudos::utils::fancy::clear_line();
+    kudos::printlgln!(kudos::LogType::Good, "Loaded!");
 
     #[cfg(test)]
     test_main();

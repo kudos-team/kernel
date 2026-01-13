@@ -1,4 +1,4 @@
-use kudos::vga_buffer::{ColorCode, Color, WRITER, DEFAULT_FG, DEFAULT_BG, BUFFER_HEIGHT};
+use crate::vga_buffer::{ColorCode, Color, WRITER, DEFAULT_FG, DEFAULT_BG, BUFFER_HEIGHT};
 use core::fmt;
 use core::fmt::Write;
 use x86_64::instructions::interrupts;
@@ -55,7 +55,7 @@ macro_rules! printlg {
         $crate::utils::fancy::_print_status($typ, format_args!($($arg)+), false)
     };
     ($($arg:tt)+) => {
-        $crate::utils::fancy::_print_status($crate::utils::fancy::LogType::Info, format_args!($($arg)+), false)
+        $crate::utils::fancy::_print_status(kudos::LogType::Info, format_args!($($arg)+), false)
     };
 }
 #[macro_export]
@@ -64,7 +64,7 @@ macro_rules! printlgln {
         $crate::utils::fancy::_print_status($typ, format_args!($($arg)+), true)
     };
     ($($arg:tt)+) => {
-        $crate::utils::fancy::_print_status($crate::utils::fancy::LogType::Info, format_args!($($arg)+), true)
+        $crate::utils::fancy::_print_status(kudos::LogType::Info, format_args!($($arg)+), true)
     };
 }
 

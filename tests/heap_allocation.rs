@@ -4,6 +4,7 @@
 #![test_runner(kudos::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+extern crate alloc;
 use alloc::boxed::Box;
 
 #[test_case]
@@ -61,11 +62,11 @@ fn reference_count() {
     }
     // println!("vec at {:p}", vec.as_slice());
 
-    // create a reference counted vector -> will be freed when count reaches 0
+    // create a reference counted vector -> will be freed when the count reaches 0
     let reference_counted = Rc::new(vec![1, 2, 3]);
     let cloned_reference = reference_counted.clone();
     assert_eq!(Rc::strong_count(&cloned_reference), 2);
-    core::mem::drop(reference_counted);
+    drop(reference_counted);
     assert_eq!(Rc::strong_count(&cloned_reference), 1);
 }
 
@@ -90,6 +91,9 @@ fn main(boot_info: &'static BootInfo) -> ! {
     test_main();
     kudos::hlt_loop();
 }
+
+#[cfg(not(test))]
+fn test_main() {}
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {

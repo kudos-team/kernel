@@ -7,25 +7,23 @@ use core::pin::Pin;
 
 
 // Define the Slot type as a boxed closure
-type Slot<T> = Box<dyn Fn(T) -> Pin<Box<dyn Future<Output = ()> + Send + 'static>> + Send + Sync + 'static>;
+type Slot<T> = Box<dyn Fn(T) -> Pin<Box<dyn Future<Output = ()> + Send + 'static>>
+    + Send + Sync + 'static>;
+type Default<T> = Box<dyn Fn(&T) -> () + Send + Sync + 'static>;
 
 pub struct Signal<T = ()> {
     slots: Mutex<Vec<Slot<T>>>,
-    default_slot: Option<Slot<T>>,
+    default_slot: Option<Default<T>>,
 }
 
 impl<T: 'static + Clone> Signal<T> {
     pub fn new() -> Self {
         Self { slots: Mutex::new(Vec::new()), default_slot: None }
     }
-    pub fn new_default<F, Fut>(default: F) -> Self
-        where
-            F: Fn(T) -> Fut + Send + Sync + 'static,
-            Fut: Future<Output = ()> + Send + 'static {
+    pub fn new_default(default: Default<T>) -> Self {
         Self {
             slots: Mutex::new(Vec::new()),
-            // Store a boxed closure that returns a pinned boxed future
-            default_slot: Some(Box::new(move |t| Box::pin(default(t)))),
+            default_slot: Some(default),
         }
     }
 
@@ -37,20 +35,20 @@ impl<T: 'static + Clone> Signal<T> {
         self.slots.lock().push(Box::new(move |t| { Box::pin(slot(t)) }));
     }
 
+
     // Emit the signal, calling all connected slots
     pub fn emit_with(&self, args: T)
             where T: Clone + Send + 'static {
         let slots = self.slots.lock();
-        let mut executor = Executor::new();
 
         if slots.is_empty() {
             if let Some(default) = &self.default_slot {
-                executor.spawn(Task::new(default(args)));
-                executor.run();
+                default(&args);
             }
             return;
         }
 
+        let mut executor = Executor::new();
         for slot in slots.iter() {
             executor.spawn(Task::new(slot(args.clone())));
         }
@@ -62,16 +60,15 @@ impl<T: 'static + Clone> Signal<T> {
 impl Signal<()> {
     pub fn emit(&self) {
         let slots = self.slots.lock();
-        let mut executor = Executor::new();
 
         if slots.is_empty() {
             if let Some(default) = &self.default_slot {
-                executor.spawn(Task::new(default(())));
-                executor.run();
+                default(&());
             }
             return;
         }
 
+        let mut executor = Executor::new();
         for slot in slots.iter() {
             executor.spawn(Task::new(slot(())));
         }
@@ -87,11 +84,11 @@ macro_rules! connect {
         $signal._connect(move |t| {
             alloc::boxed::Box::pin(async move { $handler(&t).await })
         })
-    };
+    }
 }
 
 #[macro_export]
-macro_rules! GlobalSignal {
+macro_rules! GlobalSig{
     ($name:ident) => {
         lazy_static::lazy_static! {
             pub static ref $name: Signal<()> = Signal::new();
@@ -100,6 +97,20 @@ macro_rules! GlobalSignal {
     ($name:ident : $ty:ty) => {
         lazy_static::lazy_static! {
             pub static ref $name: Signal<$ty> = Signal<$ty>::new();
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! GlobalSignalDef {
+    ($name:ident) => {
+        lazy_static::lazy_static! {
+            pub static ref $name: Signal<()> = Signal::new_default(alloc::boxed::Box::new($default));
+        }
+    };
+    ($name:ident : $ty:ty) => {
+        lazy_static::lazy_static! {
+            pub static ref $name: Signal<$ty> = Signal::new_default(alloc::boxed::Box::new($default));
         }
     };
 }

@@ -73,8 +73,18 @@ pub fn hlt_loop() -> ! {
 
 
 use bootloader::BootInfo;
+static mut INITED: bool = false;
 /// Initialises everything necessary
-pub fn init(boot_info: &'static BootInfo) {
+pub fn init(boot_info: &'static BootInfo, fancy: bool) {
+    unsafe {
+        if INITED {
+            return
+        }
+        INITED = true;
+    }
+    if fancy {
+        printlg!("Loading...");
+    }
     use x86_64::VirtAddr;
 
     gdt::init();
@@ -89,6 +99,11 @@ pub fn init(boot_info: &'static BootInfo) {
     };
     allocator::init_heap(&mut mapper, &mut frame_allocator)
         .expect("heap initialization failed");
+
+    if fancy {
+        utils::fancy::clear_line();
+        printlgln!(LogType::Good, "Loaded!");
+    }
 }
 
 

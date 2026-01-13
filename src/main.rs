@@ -30,10 +30,7 @@ fn panic(info: &PanicInfo) -> ! {
 // This function is called on init
 entry_point!(kernel_main);
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
-    kudos::printlg!("Loading...");
-    kudos::init(boot_info);
-    kudos::utils::fancy::clear_line();
-    kudos::printlgln!(kudos::LogType::Good, "Loaded!");
+    kudos::init(boot_info, true);
 
     #[cfg(test)]
     test_main();

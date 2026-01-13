@@ -28,7 +28,7 @@ use bootloader::{BootInfo, entry_point};
 
 entry_point!(kernel_main);
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
-    kudos::init(boot_info);
+    kudos::init(boot_info, false);
     test_main();
 
     kudos::hlt_loop();

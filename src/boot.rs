@@ -19,15 +19,21 @@ async fn main() {
     }
 }
 
-async fn timer_int(_: &()) {
-    use kudos::print;
-    print!(".");
-}
-
 /// This function will run when running the main program
 pub fn on_boot() {
-    use kudos::{connect, interrupts::TimerIntSig};
-    connect!(TimerIntSig, timer_int);
+    use kudos::{connect, interrupts::{TimerIntSig, BreakpointIntSig}};
+    connect!(TimerIntSig, async |_| {
+        use kudos::print;
+        print!(".");
+    });
+    connect!(BreakpointIntSig, async |_| {
+        use crate::printlgln;
+        printlgln!(LogType::Error, "Breakpoint occurred!");
+    });
+
+    use kudos::interrupts::breakpoint;
+    breakpoint();
+
     printlgln!(LogType::Info, "Test info!");
     printlgln!(LogType::Good, "Test good!");
     printlgln!(LogType::Warn, "Test warn!");

@@ -44,6 +44,10 @@ panic = "abort"
 [profile.release]
 panic = "abort"
 
+[lib]
+name = "kudos"
+path = "src/lib.rs"
+
 [[bin]]
 name = "kudos"
 test = true

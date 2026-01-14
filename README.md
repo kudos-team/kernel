@@ -9,7 +9,7 @@ Also for running and testing ensure you have Qemu installed.
 ## Doing stuff with the code
 ### Building
 ```bash
-cargo build
+cargo build --release
 ```
 ### Running
 ```bash

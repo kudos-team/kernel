@@ -7,6 +7,9 @@
 #[cfg(not(test))]
 mod boot;
 
+#[cfg(not(test))]
+#[allow(dead_code)]
+fn test_main(){}
 
 use core::panic::PanicInfo;
 use bootloader::{BootInfo, entry_point};

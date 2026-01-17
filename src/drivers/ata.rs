@@ -1,4 +1,3 @@
-use core::ffi::c_uchar;
 use x86_64::instructions::port::{Port, PortReadOnly};
 
 #[derive(Debug, Clone)]
@@ -109,6 +108,8 @@ pub fn identify() -> Result<AtaDeviceIdentity, &'static str>{
         for i in 0..256{
             buffer[i] = data_port.read();
         }
+
+        status_port.read();
 
         AtaDeviceIdentity::from_buffer(&buffer)
     }

@@ -21,6 +21,9 @@ pub static PICS: spin::Mutex<ChainedPics> =
 pub enum InterruptIndex {
     Timer = PIC_1_OFFSET,
     Keyboard,
+    AtaPrimary = PIC_1_OFFSET + 14, // IRQ 14
+    AtaSecondary = PIC_1_OFFSET + 15, // IRQ 15
+
 }
 
 impl InterruptIndex {
@@ -47,6 +50,13 @@ lazy_static! {
         idt[InterruptIndex::Keyboard.as_usize()]
             .set_handler_fn(keyboard_interrupt_handler);
         idt.page_fault.set_handler_fn(page_fault_handler);
+
+        idt[InterruptIndex::AtaPrimary.as_usize()]
+            .set_handler_fn(ata_primary_interrupt_handler);
+        idt[InterruptIndex::AtaSecondary.as_usize()]
+            .set_handler_fn(ata_secondary_interrupt_handler);
+
+
         idt
     };
 }
@@ -121,6 +131,25 @@ extern "x86-interrupt" fn double_fault_handler(
     panic!("EXCEPTION: DOUBLE FAULT\n{:#?}", stack_frame);
 }
 
+extern "x86-interrupt" fn ata_primary_interrupt_handler(
+    _stack_frame: InterruptStackFrame)
+{
+    // Acknowledge the interrupt
+    unsafe {
+        PICS.lock()
+            .notify_end_of_interrupt(InterruptIndex::AtaPrimary.as_u8());
+    }
+}
+
+extern "x86-interrupt" fn ata_secondary_interrupt_handler(
+    _stack_frame: InterruptStackFrame)
+{
+    // Acknowledge the interrupt
+    unsafe {
+        PICS.lock()
+            .notify_end_of_interrupt(InterruptIndex::AtaSecondary.as_u8());
+    }
+}
 
 #[test_case]
 fn test_breakpoint_exception() {

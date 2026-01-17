@@ -13,7 +13,7 @@ pub mod sigslt;
 
 pub mod interrupts;
 pub mod gdt;
-
+pub mod drivers;
 pub mod serial;
 pub mod vga_buffer;
 
@@ -74,7 +74,7 @@ pub fn hlt_loop() -> ! {
 
 use bootloader::BootInfo;
 static mut INITED: bool = false;
-/// Initialises everything necessary
+/// Initializes everything necessary
 pub fn init(boot_info: &'static BootInfo, fancy: bool) {
     unsafe {
         if INITED {
@@ -114,7 +114,7 @@ entry_point!(test_kernel_main);
 // Entry point for `cargo test`
 #[cfg(test)]
 fn test_kernel_main(boot_info: &'static BootInfo) -> ! {
-    init(boot_info);
+    init(boot_info, false);
     test_main();
     hlt_loop();
 }

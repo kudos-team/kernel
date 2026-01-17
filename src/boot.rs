@@ -20,11 +20,11 @@ async fn main() {
 
 /// This function will run when running the main program
 pub fn on_boot() {
-    use kudos::{connect, interrupts::{TimerIntSig, BreakpointIntSig}};
-    connect!(TimerIntSig, async |_| {
-        use kudos::print;
-        print!(".");
-    });
+    use kudos::{connect, interrupts::BreakpointIntSig};
+    // connect!(TimerIntSig, async |_| {
+    //     use kudos::print;
+    //     print!(".");
+    // });
     connect!(BreakpointIntSig, async |_| {
         use kudos::printlgln;
         printlgln!(LogType::Error, "Breakpoint occurred!");

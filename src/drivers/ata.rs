@@ -1,6 +1,51 @@
+use core::ffi::c_uchar;
 use x86_64::instructions::port::{Port, PortReadOnly};
 
-pub fn identify() -> Result<[u16; 256], &'static str>{
+#[derive(Debug, Clone)]
+pub struct AtaDeviceIdentity{
+    pub model_number: [u8; 40],
+    pub serial_number: [u8; 20]
+}
+
+impl AtaDeviceIdentity {
+    pub fn from_buffer(buffer: &[u16; 256]) -> Result<Self, &'static str>{
+        let mut model = [0u8; 40];
+
+        let mut current_char = 0;
+        for i in 27..=46{
+            let word = buffer[i];
+
+            let first_char = (word >> 8) as u8;
+            let second_char = (word & 0x00FF) as u8;
+
+            model[current_char] = first_char;
+            model[current_char + 1] = second_char;
+            current_char += 2;
+        }
+
+        let mut serial = [0u8; 20];
+        current_char = 0;
+        for i in 10..=19{
+            let word = buffer[i];
+
+
+            let first_char = (word >> 8) as u8;
+            let second_char = (word & 0x00FF) as u8;
+
+            serial[current_char] = first_char;
+            serial[current_char + 1] = second_char;
+            current_char += 2;
+        }
+
+        Ok(AtaDeviceIdentity{
+            model_number: model,
+            serial_number: serial,
+        })
+    }
+}
+
+
+pub fn identify() -> Result<AtaDeviceIdentity, &'static str>{
     // PSST! These comments may seem AI-generated, but these are comments are copy-pasted from OSDev Wiki!
     // Source: https://wiki.osdev.org/ATA_PIO_Mode#IDENTIFY_command
 
@@ -65,6 +110,6 @@ pub fn identify() -> Result<[u16; 256], &'static str>{
             buffer[i] = data_port.read();
         }
 
-        Ok(buffer)
+        AtaDeviceIdentity::from_buffer(&buffer)
     }
 }

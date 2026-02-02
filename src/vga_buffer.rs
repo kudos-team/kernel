@@ -65,6 +65,16 @@ pub struct Writer {
 }
 
 impl Writer {
+    pub fn get_char_at(&mut self, row: usize, col: usize) -> u8 {
+        self.buffer.chars[row][col].read().ascii_character
+    }
+    pub fn set_char_at(&mut self, row: usize, col: usize, byte: u8) {
+        let color_code = self.color_code;
+        self.buffer.chars[row][col].write(ScreenChar {
+            ascii_character: byte,
+            color_code,
+        });
+    }
     pub fn write_byte(&mut self, byte: u8) {
         match byte {
             b'\n' => self.new_line(),

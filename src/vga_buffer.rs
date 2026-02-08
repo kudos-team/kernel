@@ -34,6 +34,9 @@ impl ColorCode {
     pub fn new(foreground: Color, background: Color) -> ColorCode {
         ColorCode((background as u8) << 4 | (foreground as u8))
     }
+    pub fn default() -> ColorCode {
+        ColorCode::new(DEFAULT_FG, DEFAULT_BG)
+    }
 }
 pub const DEFAULT_FG: Color = Color::White;
 pub const DEFAULT_BG: Color = Color::Black;
@@ -147,7 +150,7 @@ use spin::Mutex;
 lazy_static! {
     pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
         column_position: 0,
-        color_code: ColorCode::new(DEFAULT_FG, DEFAULT_BG),
+        color_code: ColorCode::default(),
         buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
     });
 }

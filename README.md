@@ -47,3 +47,8 @@ This contains tests that get individually compiled and ran during `cargo test`
     - `utils/fancy.rs` - contains stuff to make the output fancy!
     - `utils/keys.rs` - contains abstractions for interacting with the keyboard!
 
+##### Clarifications
+- The keyboard files
+    - `task/keyboard.rs` contains the stuff for capturing keyboard events and stuff
+    - `keyboard.rs` contains an abstraction of `tasks/keyboard.rs` to make it easier to use
+    - `utils/keys.rs` contains examples of common use cases for capturing keyboard events

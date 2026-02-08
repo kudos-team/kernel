@@ -114,7 +114,7 @@ entry_point!(test_kernel_main);
 // Entry point for `cargo test`
 #[cfg(test)]
 fn test_kernel_main(boot_info: &'static BootInfo) -> ! {
-    init(boot_info);
+    init(boot_info, false);
     test_main();
     hlt_loop();
 }

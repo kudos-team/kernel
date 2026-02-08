@@ -4,6 +4,8 @@
 #![test_runner(kudos::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+extern crate alloc;
+
 use alloc::boxed::Box;
 
 #[test_case]

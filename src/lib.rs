@@ -17,6 +17,8 @@ pub mod gdt;
 pub mod serial;
 pub mod vga_buffer;
 
+pub mod keyboard;
+
 pub mod task;
 
 pub mod utils;
@@ -99,6 +101,8 @@ pub fn init(boot_info: &'static BootInfo, fancy: bool) {
     };
     allocator::init_heap(&mut mapper, &mut frame_allocator)
         .expect("heap initialization failed");
+
+    crate::task::keyboard::ScancodeStream::init();
 
     if fancy {
         utils::fancy::clear_line();

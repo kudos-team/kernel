@@ -1,14 +1,13 @@
 use kudos::utils::fancy;
 use kudos::utils::keys::choice;
 use kudos::{print, println, printlgln, LogType};
-use kudos::task::{Task, executor::Executor, keyboard::ScancodeStream};
+use kudos::task::{Task, executor::Executor};
 extern crate alloc;
 
 async fn main() {
-    let mut scancodes = ScancodeStream::new();
     loop {
         let chararr = ['y', 'n'];
-        let c = choice(&mut scancodes, &chararr).await;
+        let c = choice(&chararr).await;
         fancy::clear_line();
         if c == 'y' {
             print!("Yes!");

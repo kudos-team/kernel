@@ -3,6 +3,8 @@ use crate::println;
 use conquer_once::spin::OnceCell;
 use crossbeam_queue::ArrayQueue;
 
+use spin::Mutex;
+
 use core::{pin::Pin, task::{Poll, Context}};
 use futures_util::task::AtomicWaker;
 use futures_util::stream::Stream;
@@ -29,10 +31,16 @@ pub struct ScancodeStream {
     _private: (),
 }
 impl ScancodeStream {
-    pub fn new() -> Self {
+    fn new() -> Self {
         SCANCODE_QUEUE.try_init_once(|| ArrayQueue::new(100))
             .expect("ScancodeStream::new should only be called once");
         ScancodeStream { _private: () }
+    }
+
+    pub fn init() {
+        SCANCODE_STREAM
+            .try_init_once(|| Mutex::new(ScancodeStream::new()))
+            .expect("ScancodeStream::init called twice");
     }
 
     pub fn clear_queue(&self) {
@@ -68,3 +76,10 @@ impl Stream for ScancodeStream {
     }
 }
 
+static SCANCODE_STREAM: OnceCell<Mutex<ScancodeStream>> = OnceCell::uninit();
+#[allow(non_snake_case)]
+pub fn get_ScancodeStream() -> &'static Mutex<ScancodeStream> {
+    SCANCODE_STREAM
+        .try_get()
+        .expect("ScancodeStream not initialised")
+}

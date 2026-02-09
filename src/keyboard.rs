@@ -1,8 +1,9 @@
 use core::{pin::Pin, task::{Context, Poll}};
-use crate::task::keyboard::get_ScancodeStream;
-use futures_util::stream::Stream;
+use core::sync::atomic::Ordering;
+
+use crate::task::keyboard::{get_ScancodeStream, SUPER_DOWN};
 use pc_keyboard::{layouts, KeyCode, DecodedKey, HandleControl, Keyboard, ScancodeSet1};
-use futures_util::StreamExt;
+use futures_util::{StreamExt, stream::Stream};
 
 
 pub struct KeyEvent {
@@ -13,6 +14,7 @@ pub struct KeyEvent {
     pub ctrl: bool,
     pub alt: bool,
     pub caps: bool,
+    pub souper: bool,
 }
 
 pub struct KeyboardStream {
@@ -63,6 +65,7 @@ impl Stream for KeyboardStream {
                         ctrl:  m.is_ctrl(),
                         alt:   m.is_alt() || m.is_altgr(),
                         caps:  m.is_caps(),
+                        souper:SUPER_DOWN.load(Ordering::Relaxed),
                     }));
                 }
             }

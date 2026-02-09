@@ -5,10 +5,16 @@ use crossbeam_queue::ArrayQueue;
 
 use spin::Mutex;
 
-use core::{pin::Pin, task::{Poll, Context}};
+use core::{
+    pin::Pin,
+    task::{Poll, Context},
+    sync::atomic::{AtomicBool, Ordering},
+};
 use futures_util::task::AtomicWaker;
 use futures_util::stream::Stream;
 
+
+pub static SUPER_DOWN: AtomicBool = AtomicBool::new(false);
 
 static WAKER: AtomicWaker = AtomicWaker::new();
 
@@ -17,6 +23,13 @@ static SCANCODE_QUEUE: OnceCell<ArrayQueue<u8>> = OnceCell::uninit();
 /// Called by the keyboard interrupt handler
 pub(crate) fn add_scancode(scancode: u8) {
     if let Ok(queue) = SCANCODE_QUEUE.try_get() {
+        match scancode {
+            0x5B => SUPER_DOWN.store(true, Ordering::Relaxed),  // LSuper down
+            0xDB => SUPER_DOWN.store(false, Ordering::Relaxed), // LSuper up
+            0x5C => SUPER_DOWN.store(true, Ordering::Relaxed),  // RSuper down
+            0xDC => SUPER_DOWN.store(false, Ordering::Relaxed), // RSuper up
+            _ => {}
+        }
         if let Err(_) = queue.push(scancode) {
             println!("WARNING: scancode queue full; dropping keyboard input");
         } else {

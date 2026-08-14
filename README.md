@@ -6,19 +6,23 @@ rustup component add llvm-tools-preview
 cargo install bootimage
 ```
 Also for running and testing ensure you have Qemu installed.
+
 ## Doing stuff with the code
 ### Building
 ```bash
 cargo build --release
 ```
+
 ### Running
 ```bash
 cargo run
 ```
+
 ### Testing
 ```bash
 cargo test
 ```
+
 ## What the files do
 ### `tests/`
 This contains tests that get individually compiled and ran during `cargo test`
